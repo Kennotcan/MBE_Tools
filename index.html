@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔧MBE Tools</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        margin: 0;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        flex-direction: column;
+    }
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 20px;
+        width: 100%;
+        max-width: 800px;
+    }
+    .grid-item {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        padding: 20px;
+        cursor: pointer;
+        transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+        user-select: none; /* 禁止文字选择 */
+    }
+    .grid-item:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        background-color: #e60012; /* 奥美红 */
+        color: #fff; /* 改变文字颜色以适应背景 */
+    }
+    a {
+        text-decoration: none;
+        color: inherit;
+        font-size: 18px;
+        font-weight: bold;
+        display: block;
+        height: 100%;
+        width: 100%;
+    }
+</style>
+</head>
+<body>
+<h1>🔧 MBE Tools 🔧</h1>
+<div class="grid-container" id="toolGrid">
+    <!-- 工具入口将由 JavaScript 动态插入 -->
+</div>
+
+<script>
+    // 工具列表 - 每次添加新工具时，在这里添加新的条目
+    const tools = [
+        { name: "体验版URL生成", file: "tools/experience-link-generator.html" },
+        { name: "QT URL 生成", file: "tools/qt-url-generator.html" }
+        // 在此处添加更多工具
+    ];
+
+    const toolGrid = document.getElementById('toolGrid');
+
+    tools.forEach(tool => {
+        const toolItem = document.createElement('div');
+        toolItem.className = 'grid-item';
+        toolItem.innerHTML = `<a href="${tool.file}">${tool.name}</a>`;
+        toolGrid.appendChild(toolItem);
+    });
+</script>
+</body>
+</html>
