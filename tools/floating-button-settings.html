@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Floating button设置</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+        position: relative;
+    }
+    .container {
+        max-width: 600px;
+        width: 100%;
+        margin: auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: left;
+    }
+    textarea, input[type="text"] {
+        width: calc(100% - 22px);
+        padding: 10px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px; /* 缩小字号 */
+        resize: none;
+    }
+    button {
+        background-color: #e60012;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+        margin: 5px;
+    }
+    button.disabled {
+        background-color: #ddd;
+        color: #aaa;
+        cursor: not-allowed;
+    }
+    button:hover:not(.disabled) {
+        background-color: #b0000d;
+    }
+    .result {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #f0f0f0;
+        border-radius: 5px;
+        word-break: break-all;
+        text-align: left;
+        font-size: 14px; /* 缩小字号 */
+    }
+    .back-button {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        display: inline-block;
+        text-decoration: none;
+        color: #666; /* 初始文字颜色为灰色 */
+        font-size: 16px;
+        padding: 5px 10px;
+        border-radius: 5px;
+        overflow: hidden;
+        transition: color 0.3s ease;
+    }
+    .back-button span {
+        position: relative;
+        z-index: 1;
+    }
+    .back-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #e60012; /* 奥美红 */
+        z-index: 0;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s ease;
+    }
+    .back-button:hover::before {
+        transform: scaleX(1);
+    }
+    .back-button:hover span {
+        color: #fff; /* 悬停时文字颜色变为白色 */
+    }
+    #toast {
+        visibility: hidden;
+        min-width: 250px;
+        margin-left: -125px;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 2px;
+        padding: 16px;
+        position: fixed;
+        z-index: 1;
+        left: 50%;
+        bottom: 30px;
+        font-size: 17px;
+    }
+    #toast.show {
+        visibility: visible;
+        animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+    @keyframes fadein {
+        from {bottom: 0; opacity: 0;}
+        to {bottom: 30px; opacity: 1;}
+    }
+    @keyframes fadeout {
+        from {bottom: 30px; opacity: 1;}
+        to {bottom: 0; opacity: 0;}
+    }
+</style>
+</head>
+<body>
+<a href="../index.html" class="back-button">
+    <span>⬅ 返回主页</span>
+</a>
+
+<div class="container">
+    <h1>Floating button设置</h1>
+    <label for="regex">当前正则表达式：</label>
+    <textarea id="regex" rows="4">^(?!https://www\.mercedes-benz\.com\.cn/vehicles/(amg/|eq/eqe\.html|eq/eqe-53\.html|eq/eqe-53-suv\.html|eq/eqs-53\.html|sedan/s-63-l\.html|suv/g-580\.html|sedan/s-class\.html))https://www\.mercedes-benz\.com\.cn/vehicles/.*\.html$</textarea>
+    
+    <label>选择操作：</label><br>
+    <button id="addButton" onclick="selectOperation('add')">增加字段</button>
+    <button id="removeButton" style="display: none;"：onclick="selectOperation('remove')">删减字段</button><br>
+
+    <label for="field">输入字段（工具将自动增加.html后缀）：</label>
+    <input type="text" id="field" placeholder="例如：GLC-53"><br>
+
+    <button onclick="modifyRegex()">生成正则表达式</button>
+
+    <div class="result" id="result"></div>
+    <button onclick="copyResult()">复制结果</button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+    let selectedOperation = '';
+
+    function selectOperation(operation) {
+        selectedOperation = operation;
+        document.getElementById('addButton').classList.toggle('disabled', operation === 'remove');
+        document.getElementById('removeButton').classList.toggle('disabled', operation === 'add');
+    }
+
+    function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.className = "show";
+        setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+    }
+
+    function modifyRegex() {
+        const regexInput = document.getElementById('regex').value;
+        const field = document.getElementById('field').value.trim();
+
+        if (!field) {
+            showToast("请输入有效的字段。");
+            return;
+        }
+
+        if (!selectedOperation) {
+            showToast("请选择一个操作。");
+            return;
+        }
+
+        let modifiedRegex = regexInput;
+        const newField = field.replace(/\./g, '\\.') + '\\.html';
+
+        if (selectedOperation === 'add') {
+            // 检查字段是否已存在
+            if (new RegExp(`\\|${newField}`).test(regexInput)) {
+                showToast("字段已存在于正则表达式中！");
+                return;
+            }
+            // 增加字段
+            modifiedRegex = regexInput.replace(/(\(.*?)(\))/,
+                (match, p1, p2) => `${p1}${newField}|${p2}`);
+        } else if (selectedOperation === 'remove') {
+            // 删减字段
+            const fieldPattern = new RegExp(`\\|?${newField}`, 'g');
+            modifiedRegex = modifiedRegex.replace(fieldPattern, '');
+            
+            // 清理多余的管道符号
+            modifiedRegex = modifiedRegex.replace(/\(\|/, '(').replace(/\|\)/, ')');
+        }
+
+        document.getElementById('regex').value = modifiedRegex; // 更新文本框内容
+        document.getElementById('result').textContent = modifiedRegex;
+    }
+
+    function copyResult() {
+        const resultText = document.getElementById('result').textContent;
+        navigator.clipboard.writeText(resultText).then(() => {
+            showToast("结果已复制到剪贴板！");
+        }, () => {
+            showToast("复制失败，请手动复制结果。");
+        });
+    }
+</script>
+</body>
+</html>
