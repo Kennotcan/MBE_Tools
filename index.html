@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🔧MBE Tools</title>
+<meta charset="viewport" content="width=device-width, initial-scale=1.0">
+<title>工具主页</title>
 <style>
     body {
         font-family: Arial, sans-serif;
         background-color: #f4f4f9;
         color: #333;
         margin: 0;
-        padding: 10px;
+        padding: 20px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -23,6 +22,7 @@
         gap: 20px;
         width: 100%;
         max-width: 800px;
+        margin-top: 40px; /* 美观的顶部距离 */
     }
     .grid-item {
         background-color: #fff;
@@ -49,21 +49,31 @@
         height: 100%;
         width: 100%;
     }
+    footer {
+        margin-top: 200px;
+        text-align: center;
+        width: 100%;
+        font-size: 8px;
+        color: rgba(0, 0, 0, 0.25); /* 25% 灰色 */
+        font-weight: bold;
+    }
 </style>
 </head>
 <body>
-<h1>🔧 MBE Tools 🔧</h1>
+<h1>工具主页</h1>
 <div class="grid-container" id="toolGrid">
     <!-- 工具入口将由 JavaScript 动态插入 -->
 </div>
 
+<footer>COPYRIGHTS©KEN.HUANG@OGILVY</footer>
+
 <script>
     // 工具列表 - 每次添加新工具时，在这里添加新的条目
     const tools = [
-        { name: "体验版URL生成", file: "tools/experience-link-generator.html" },
-        { name: "QT URL 生成", file: "tools/qt-url-generator.html" }
-        { name: "批量命名工具", file: "tools/Re-naming-tool.html" }
-        // 在此处添加更多工具
+        { name: "体验版链接生成器", file: "tools/experience-link-generator.html" },
+        { name: "QT URL 生成器", file: "tools/qt-url-generator.html" },
+        { name: "Floating button", file: "tools/floating-button-settings.html" },
+        { name: "文件重命名脚本", file: "tools/file-rename-script-generator.html" }
     ];
 
     const toolGrid = document.getElementById('toolGrid');
